@@ -99,25 +99,23 @@ body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;
 <body>
 <div id="app"></div>
 <script>
-const AT_TOKEN='patUKMoSH0FIHG2PS.1f17ea8095a5a6da8e69883e1e626983ff269ddfd55270ca25c0f293cde1023e';
-const AT_BASE='appDBUXp7Qt3FSKGD';
-const AT_TABLE_VIS='tbld3K7NjvYJF9Hph';
-const AT_TABLE_POS='tblJjFW57Na2SXzO6';
+const GS_URL='https://script.google.com/macros/s/AKfycbzcguQhvW18vHC9tlAIacHIjdSYtk7uHBBrh2zrrcb0g9nTjWWetG7ubSSiKeXfUqfg/exec';
 
 async function sendToAirtable(quizId,ld,answers,summary){
-  const tbl=quizId==='vis'?AT_TABLE_VIS:AT_TABLE_POS;
-  const url=`https://api.airtable.com/v0/${AT_BASE}/${tbl}`;
-  let fields={'Date':new Date().toISOString().slice(0,10),'Prénom':ld.firstName,'Nom':ld.lastName,'Email':ld.email,'Résultat':summary};
-  if(quizId==='vis'){
-    ['Q1 — Source de recherche','Q2 — Clients via site/Google','Q3 — Résultat Google','Q4 — Trouvable en ligne','Q5 — Demandes par mois','Q6 — Page de contact claire','Q7 — Ce qui manque']
-    .forEach((l,i)=>{if(answers[i])fields[l]=answers[i];});
-  } else {
-    ['Q1 — Présence actuelle','Q2 — Objectif web','Q3 — Cible','Q4 — Frein principal','Q5 — Délai souhaité','Q6 — Budget','Q7 — Attente prestataire','Q8 — Expérience passée']
-    .forEach((l,i)=>{if(answers[i])fields[l]=answers[i];});
-  }
+  const payload={
+    quiz:quizId,
+    date:new Date().toLocaleDateString('fr-FR'),
+    firstName:ld.firstName,
+    lastName:ld.lastName,
+    email:ld.email,
+    summary:summary,
+    q1:answers[0]||'',q2:answers[1]||'',q3:answers[2]||'',
+    q4:answers[3]||'',q5:answers[4]||'',q6:answers[5]||'',
+    q7:answers[6]||'',q8:answers[7]||''
+  };
   try{
-    const r=await fetch(url,{method:'POST',headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify({fields})});
-    return r.ok;
+    await fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    return true;
   }catch(e){return false;}
 }
 
