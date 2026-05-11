@@ -99,10 +99,10 @@ body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;
 <body>
 <div id="app"></div>
 <script>
-const GS_URL='https://script.google.com/macros/s/AKfycbzcguQhvW18vHC9tlAIacHIjdSYtk7uHBBrh2zrrcb0g9nTjWWetG7ubSSiKeXfUqfg/exec';
+const GS_URL='https://hooks.zapier.com/hooks/catch/27561619/4y8l9v0/';
 
 async function sendToAirtable(quizId,ld,answers,summary){
-  const payload={
+  const p=new URLSearchParams({
     quiz:quizId,
     date:new Date().toLocaleDateString('fr-FR'),
     firstName:ld.firstName,
@@ -112,9 +112,9 @@ async function sendToAirtable(quizId,ld,answers,summary){
     q1:answers[0]||'',q2:answers[1]||'',q3:answers[2]||'',
     q4:answers[3]||'',q5:answers[4]||'',q6:answers[5]||'',
     q7:answers[6]||'',q8:answers[7]||''
-  };
+  });
   try{
-    await fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    await fetch(GS_URL+'?'+p.toString(),{method:'GET',mode:'no-cors'});
     return true;
   }catch(e){return false;}
 }
