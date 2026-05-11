@@ -1,0 +1,36 @@
+<!-- QUIZ DIALLA DABO — Embed Webflow -->
+<style>
+  #quiz-wrapper {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  #quiz-frame {
+    width: 100%;
+    border: none;
+    border-radius: 16px;
+    display: block;
+    transition: height 0.3s ease;
+  }
+</style>
+
+<div id="quiz-wrapper">
+  <iframe
+    id="quiz-frame"
+    src="URL_DE_TON_QUIZ_HEBERGE"
+    height="700"
+    scrolling="no"
+    allowtransparency="true"
+    title="Quiz Dialla Dabo"
+  ></iframe>
+</div>
+
+<script>
+  // Ajustement automatique de la hauteur selon le contenu
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'quiz-resize') {
+      document.getElementById('quiz-frame').style.height = e.data.height + 'px';
+    }
+  });
+</script>
