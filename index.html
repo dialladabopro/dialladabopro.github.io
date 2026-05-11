@@ -1,36 +1,350 @@
-<!-- QUIZ DIALLA DABO — Embed Webflow -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Quiz — Dialla Dabo</title>
 <style>
-  #quiz-wrapper {
-    width: 100%;
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-  }
-  #quiz-frame {
-    width: 100%;
-    border: none;
-    border-radius: 16px;
-    display: block;
-    transition: height 0.3s ease;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fdfaf0;
+  --surface:#fff;
+  --surface2:#f5f1e4;
+  --border:#e2dcc8;
+  --border2:#cfc8b0;
+  --text:#0e0212;
+  --muted:#6b6070;
+  --blue:#1a4fff;
+  --blue-hover:#1340e0;
+  --peach:#ffbe90;
+  --peach-hover:#ffa96a;
+  --cream:#fdfaf0;
+}
+body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:2.5rem 1rem}
+#app{width:100%;max-width:600px}
+.home-eyebrow{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:1.25rem;display:flex;align-items:center;gap:8px}
+.home-eyebrow::before{content:'';display:inline-block;width:6px;height:6px;background:var(--blue);border-radius:50%}
+.home-title{font-size:clamp(2rem,6vw,2.8rem);font-weight:700;line-height:1.1;color:var(--text);margin-bottom:.75rem}
+.home-title em{color:var(--blue);font-style:normal}
+.home-sub{font-size:14px;font-weight:400;color:var(--muted);margin-bottom:2.5rem;line-height:1.7;max-width:480px}
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.75rem}
+@media(max-width:420px){.home-grid{grid-template-columns:1fr}}
+.hcard{border:1.5px solid var(--border);border-radius:14px;padding:1.5rem 1.25rem;cursor:pointer;background:var(--surface);transition:border-color .2s,box-shadow .2s;text-align:left}
+.hcard:hover{box-shadow:0 4px 20px rgba(0,0,0,.07)}
+.hcard.vis:hover{border-color:var(--blue)}
+.hcard.peach:hover{border-color:var(--peach)}
+.hcard-icon{font-size:22px;margin-bottom:.75rem}
+.hcard h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:5px;letter-spacing:.01em}
+.hcard p{font-size:12px;color:var(--muted);line-height:1.55;font-weight:400}
+.qtag{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:1rem}
+.qtag-vis{background:rgba(26,79,255,.09);color:var(--blue);border:1.5px solid rgba(26,79,255,.2)}
+.qtag-peach{background:rgba(255,190,144,.2);color:#b85c00;border:1.5px solid rgba(255,190,144,.5)}
+.quiz-title{font-size:clamp(1.5rem,4.5vw,2rem);font-weight:700;line-height:1.15;color:var(--text);margin-bottom:.25rem}
+.quiz-sub{font-size:13px;color:var(--muted);margin-bottom:2rem;font-weight:400}
+.pbar-wrap{height:3px;background:var(--border);border-radius:3px;margin-bottom:2rem;overflow:hidden}
+.pbar-fill{height:100%;border-radius:3px;transition:width .4s}
+.pfill-vis{background:var(--blue)}
+.pfill-peach{background:var(--peach)}
+.qnum{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:.6rem}
+.qtext{font-size:16px;font-weight:600;color:var(--text);margin-bottom:1.5rem;line-height:1.55}
+.qhint{font-size:12px;color:var(--muted);margin:-1rem 0 1.5rem;font-style:italic;font-weight:400}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;background:var(--surface);transition:background .12s,border-color .12s}
+.opt:hover{background:var(--surface2)}
+.opt.sv{background:var(--blue);border-color:var(--blue)}
+.opt.sv .oletter{background:var(--cream);border-color:var(--cream);color:var(--text)}
+.opt.sv .otext{color:#fff}
+.opt.sp{background:var(--peach);border-color:var(--peach)}
+.opt.sp .oletter{background:var(--cream);border-color:var(--cream);color:var(--text)}
+.opt.sp .otext{color:var(--text)}
+.oletter{font-size:11px;font-weight:700;min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--border2);color:var(--muted);flex-shrink:0;margin-top:1px;transition:background .12s,border-color .12s}
+.otext{color:var(--text);font-size:13px;line-height:1.5;font-weight:500}
+.nav{display:flex;align-items:center;justify-content:space-between;margin-top:2rem;gap:10px}
+.btn{padding:11px 22px;border-radius:10px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);font-family:'Montserrat',sans-serif;transition:background .15s,border-color .15s,color .15s;letter-spacing:.01em}
+.btn:hover{background:var(--surface2);color:var(--text);border-color:var(--border2)}
+.btn:disabled{opacity:.25;cursor:not-allowed}
+.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+.btn-primary:hover{background:var(--blue-hover);border-color:var(--blue-hover);color:#fff}
+.back-link{text-align:center;margin-top:1.25rem}
+.back-link button{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:500}
+.back-link button:hover{color:var(--text)}
+.lead-card{border:1.5px solid var(--border);border-radius:14px;padding:1.75rem;background:var(--surface);margin-bottom:1.5rem}
+.lead-card h3{font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.lead-card p{font-size:13px;color:var(--muted);margin-bottom:1.5rem;line-height:1.65;font-weight:400}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.field-row.full{grid-template-columns:1fr}
+.field label{display:block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.field input{width:100%;background:var(--bg);border:1.5px solid var(--border2);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);font-family:'Montserrat',sans-serif;font-weight:500;outline:none;transition:border-color .15s}
+.field input:focus{border-color:var(--blue)}
+.field-err{font-size:11px;color:#dc2626;margin-top:4px;font-weight:600}
+.rcard{border:1.5px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;background:var(--surface)}
+.rtitle{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:8px}
+.rdesc{font-size:13px;color:var(--muted);line-height:1.7;font-weight:400}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.pcard{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px}
+.pcard-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.pcard-val{font-size:12px;font-weight:600;color:var(--text)}
+.ins-info{border-left:2px solid var(--blue);background:rgba(26,79,255,.06);color:#1a3aaa;padding:10px 14px;font-size:12px;margin-bottom:8px;border-radius:0 8px 8px 0;font-weight:500}
+.ins-warn{border-left:2px solid #f59e0b;background:rgba(245,158,11,.07);color:#92400e;padding:10px 14px;font-size:12px;margin-bottom:8px;border-radius:0 8px 8px 0;font-weight:500}
+.cta-block{background:var(--text);border-radius:14px;padding:1.75rem;margin-top:1rem}
+.cta-block p{font-size:13px;color:rgba(253,250,240,.75);margin-bottom:1.25rem;line-height:1.65;font-weight:400}
+.cta-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;transition:background .15s;letter-spacing:.01em}
+.cta-btn:hover{background:var(--blue-hover)}
+.result-actions{display:flex;gap:10px;margin-top:1.25rem;flex-wrap:wrap}
+.btn-export{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:.02em;display:inline-flex;align-items:center;gap:6px;transition:background .15s}
+.btn-export:hover{background:var(--blue-hover)}
 </style>
-
-<div id="quiz-wrapper">
-  <iframe
-    id="quiz-frame"
-    src="https://dialladabopro.github.io"
-    height="700"
-    scrolling="no"
-    allowtransparency="true"
-    title="Quiz Dialla Dabo"
-  ></iframe>
-</div>
-
+</head>
+<body>
+<div id="app"></div>
 <script>
-  // Ajustement automatique de la hauteur selon le contenu
-  window.addEventListener('message', function(e) {
-    if (e.data && e.data.type === 'quiz-resize') {
-      document.getElementById('quiz-frame').style.height = e.data.height + 'px';
-    }
-  });
+const AT_TOKEN='patUKMoSH0FIHG2PS.1f17ea8095a5a6da8e69883e1e626983ff269ddfd55270ca25c0f293cde1023e';
+const AT_BASE='appDBUXp7Qt3FSKGD';
+const AT_TABLE_VIS='d3K7NjvYJF9Hph';
+const AT_TABLE_POS='JjFW57Na2SXzO6';
+
+async function sendToAirtable(quizId,ld,answers,summary){
+  const tbl=quizId==='vis'?AT_TABLE_VIS:AT_TABLE_POS;
+  const url=`https://api.airtable.com/v0/${AT_BASE}/${tbl}`;
+  let fields={'Date':new Date().toISOString().slice(0,10),'Prénom':ld.firstName,'Nom':ld.lastName,'Email':ld.email,'Résultat':summary};
+  if(quizId==='vis'){
+    ['Q1 — Source de recherche','Q2 — Clients via site/Google','Q3 — Résultat Google','Q4 — Trouvable en ligne','Q5 — Demandes par mois','Q6 — Page de contact claire','Q7 — Ce qui manque']
+    .forEach((l,i)=>{if(answers[i])fields[l]=answers[i];});
+  } else {
+    ['Q1 — Présence actuelle','Q2 — Objectif web','Q3 — Cible','Q4 — Frein principal','Q5 — Délai souhaité','Q6 — Budget','Q7 — Attente prestataire','Q8 — Expérience passée']
+    .forEach((l,i)=>{if(answers[i])fields[l]=answers[i];});
+  }
+  try{
+    const r=await fetch(url,{method:'POST',headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify({fields})});
+    return r.ok;
+  }catch(e){return false;}
+}
+
+const STORE_KEY='quiz_leads_count';
+function getCount(){return parseInt(localStorage.getItem(STORE_KEY)||'0');}
+function incCount(){localStorage.setItem(STORE_KEY,getCount()+1);}
+
+const defaultVis={
+  id:'vis',label:'Visibilité en ligne',tagCls:'qtag-vis',fillCls:'pfill-vis',selCls:'sv',
+  title:'Est-ce que les bonnes personnes te trouvent en ligne ?',
+  sub:'7 questions — sans jargon, sans prise de tête',
+  leadTitle:'Reçois ton diagnostic personnalisé',
+  leadSub:'Entre tes coordonnées pour recevoir ton résultat détaillé.',
+  ctaText:'Tu veux savoir exactement ce qui freine ta visibilité ? On en parle ensemble — gratuit et sans engagement.',
+  ctaBtn:'Prendre contact → contact@dialladabo.fr',
+  questions:[
+    {q:'Quand tu cherches un prestataire ou un service, par où tu commences ?',hint:null,opts:['Je tape sur Google','Je demande autour de moi','Je regarde sur les réseaux sociaux','Je consulte des annuaires']},
+    {q:'Est-ce que tes clients actuels t\'ont trouvé grâce à ton site ou à Google ?',hint:null,opts:['Oui, régulièrement','Oui, mais rarement','Non, ils viennent via d\'autres canaux','Je n\'ai pas encore de site']},
+    {q:'Si quelqu\'un tape le nom de ton activité sur Google, qu\'est-ce qu\'il trouve ?',hint:null,opts:['Mon site en premier résultat','Mes réseaux sociaux','Des informations éparpillées ou rien','Je n\'ai pas vérifié']},
+    {q:'Est-ce que quelqu\'un qui ne te connaît pas peut te trouver en ligne ?',hint:'Par exemple en tapant "photographe Paris" ou "coach business Lyon"',opts:['Oui, j\'apparais dans les résultats','Probablement pas','Je ne sais pas','Non, aucune présence en ligne']},
+    {q:'Combien de fois par mois tu reçois une demande via ta présence en ligne ?',hint:null,opts:['Souvent, plus de 5 fois','Quelques fois, 1 à 4 fois','Très rarement','Jamais']},
+    {q:'Est-ce que tu as une page qui décrit clairement ce que tu fais et comment te contacter ?',hint:null,opts:['Oui, un site clair et à jour','Oui, mais incomplet ou vieillissant','J\'ai juste une page de réseaux sociaux','Non, rien pour l\'instant']},
+    {q:'Qu\'est-ce qui te manque le plus dans ta présence en ligne ?',hint:null,opts:['Être trouvé par de nouveaux clients','Inspirer confiance dès la première visite','Recevoir plus de demandes de contact','Savoir si ça fonctionne vraiment']}
+  ],
+  results:[
+    {min:5,title:'Ta visibilité est déjà une force',desc:'Tu es bien positionné en ligne et tu en récoltes les fruits. L\'enjeu maintenant, c\'est d\'optimiser ce qui existe pour aller encore plus loin.'},
+    {min:3,title:'Tu es visible, mais pas assez trouvable',desc:'Tu existes en ligne, mais quelque chose freine la conversion. Les bonnes personnes ne te trouvent pas encore systématiquement.'},
+    {min:1,title:'Ta présence en ligne a besoin d\'un vrai coup de boost',desc:'Tu n\'es pas encore trouvable par ceux qui cherchent ce que tu proposes. C\'est un problème concret, avec des solutions concrètes.'},
+    {min:0,title:'C\'est le bon moment pour construire ta présence',desc:'Tu pars d\'une page blanche — et c\'est une vraie opportunité. Construire ta visibilité maintenant, c\'est attirer des clients sans dépendre du bouche-à-oreille.'}
+  ]
+};
+
+const defaultPos={
+  id:'pos',label:'Découverte projet',tagCls:'qtag-peach',fillCls:'pfill-peach',selCls:'sp',
+  title:'Parlons de ton projet.',
+  sub:'8 questions pour cerner tes besoins et voir comment je peux t\'aider',
+  leadTitle:'Reçois une réponse personnalisée',
+  leadSub:'Je t\'envoie une analyse de ton projet sous 24h.',
+  ctaText:'Tu as pris le temps de répondre — c\'est déjà une vraie démarche. La prochaine étape : 20 minutes ensemble pour construire quelque chose qui te correspond.',
+  ctaBtn:'Démarrons ensemble → contact@dialladabo.fr',
+  questions:[
+    {q:'Où en es-tu avec ta présence en ligne en ce moment ?',hint:null,opts:['Je n\'ai pas encore de site','J\'ai un site mais vieillissant ou incomplet','J\'ai un site mais sans clients','J\'ai des réseaux mais pas de site']},
+    {q:'Qu\'est-ce que tu veux accomplir avec ton projet web ?',hint:null,opts:['Attirer de nouveaux clients','Présenter mon activité professionnellement','Vendre mes produits ou services en ligne','Renforcer ma crédibilité auprès de partenaires']},
+    {q:'À qui s\'adresse ton activité ?',hint:null,opts:['À des particuliers (B2C)','À des entreprises (B2B)','Aux deux à la fois','Je définis encore ma cible']},
+    {q:'C\'est quoi ton plus grand frein par rapport à ta visibilité en ligne ?',hint:null,opts:['Je ne sais pas par où commencer','J\'ai peur que ça coûte trop cher','Je manque de temps pour m\'en occuper','Je ne sais pas si ça va m\'apporter des clients']},
+    {q:'Dans quel délai tu aimerais lancer ou relancer ta présence en ligne ?',hint:null,opts:['Le plus vite possible, c\'est urgent','Dans 1 à 2 mois','D\'ici 3 à 6 mois','Je suis encore en réflexion']},
+    {q:'Quel est ton budget indicatif pour ce projet ?',hint:'Pas de bonne ou mauvaise réponse',opts:['Moins de 500 €','Entre 500 € et 1 500 €','Entre 1 500 € et 3 000 €','Plus de 3 000 €']},
+    {q:'Qu\'est-ce que tu attends d\'un prestataire web ?',hint:null,opts:['Quelqu\'un qui gère tout à ma place','Un partenaire qui m\'explique et me forme','Un expert qui me conseille stratégiquement','Quelqu\'un de réactif et abordable']},
+    {q:'Est-ce que tu as déjà travaillé avec un prestataire web ?',hint:null,opts:['Oui, ça s\'est bien passé','Oui, mais je n\'ai pas été satisfait','Non, c\'est une première','J\'ai essayé de faire moi-même']}
+  ]
+};
+
+function dc(o){return JSON.parse(JSON.stringify(o));}
+let visConfig=dc(defaultVis),posConfig=dc(defaultPos);
+let appMode=null,cur=0,ans={},done=false,leadDone=false,leadData={};
+
+function startQuiz(id){appMode=id;cur=0;ans={};done=false;leadDone=false;leadData={};render();}
+function goBack(){appMode=null;done=false;render();}
+function pick(i){if(done)return;ans[cur]=i;render();}
+function goNext(){const cfg=appMode==='vis'?visConfig:posConfig;if(cur<cfg.questions.length-1){cur++;render();}else{done=true;render();}}
+function goPrev(){if(cur>0){cur--;render();}}
+
+function visScore(){let s=0;Object.keys(ans).forEach(i=>{const v=parseInt(i);if(ans[v]===0)s+=1;else if(ans[v]===1)s+=0.5;});return Math.round(s);}
+function getVisResult(){const s=visScore();for(let r of visConfig.results){if(s>=r.min)return r;}return visConfig.results[visConfig.results.length-1];}
+function getPosMessage(){
+  const frein=ans[3],delai=ans[4],obj=ans[1];
+  let msg='Sur la base de tes réponses, voici ce que je retiens : ';
+  if(obj===0)msg+='tu veux attirer de nouveaux clients — c\'est l\'objectif central de tout projet web bien pensé. ';
+  if(obj===1)msg+='tu veux une présence professionnelle — c\'est la base pour inspirer confiance. ';
+  if(obj===2)msg+='tu veux vendre en ligne — un bon projet bien construit peut transformer ton activité. ';
+  if(obj===3)msg+='tu veux renforcer ta crédibilité — ton site est ton meilleur ambassadeur. ';
+  if(frein===0)msg+='Tu ne sais pas encore par où commencer — c\'est exactement là que je peux t\'orienter. ';
+  if(frein===1)msg+='Le budget est une préoccupation — on peut construire quelque chose d\'efficace sans exploser les compteurs. ';
+  if(frein===2)msg+='Tu manques de temps — je peux gérer l\'essentiel pour que toi tu te concentres sur ton activité. ';
+  if(frein===3)msg+='Tu veux du concret et des résultats mesurables — c\'est exactement ce que je m\'engage à livrer. ';
+  if(delai===0)msg+='C\'est urgent pour toi — je peux m\'organiser pour avancer rapidement. ';
+  msg+='La prochaine étape, c\'est qu\'on échange 20 minutes ensemble.';
+  return msg;
+}
+
+function validateLead(){
+  const errs={};
+  if(!(leadData.firstName||'').trim())errs.firstName='Prénom requis';
+  if(!(leadData.lastName||'').trim())errs.lastName='Nom requis';
+  const em=leadData.email||'';
+  if(!em.trim()||!/^[^@]+@[^@]+\.[^@]+$/.test(em))errs.email='Email valide requis';
+  return errs;
+}
+function submitLead(){
+  const errs=validateLead();
+  if(Object.keys(errs).length>0){leadData._errs=errs;render();return;}
+  const cfg=appMode==='vis'?visConfig:posConfig;
+  const answers=cfg.questions.map((q,i)=>ans[i]!==undefined?q.opts[ans[i]]:'');
+  const summary=appMode==='vis'?getVisResult().title:getPosMessage().slice(0,120)+'...';
+  sendToAirtable(appMode,leadData,answers,summary).then(ok=>{if(ok)incCount();});
+  leadData._errs={};leadDone=true;render();
+}
+
+function renderLeadForm(cfg){
+  const errs=leadData._errs||{};
+  return `<div class="lead-card">
+    <h3>${cfg.leadTitle}</h3>
+    <p>${cfg.leadSub}</p>
+    <div class="field-row">
+      <div class="field"><label>Prénom *</label>
+        <input type="text" placeholder="Ton prénom" value="${leadData.firstName||''}" oninput="leadData.firstName=this.value"/>
+        ${errs.firstName?`<div class="field-err">${errs.firstName}</div>`:''}
+      </div>
+      <div class="field"><label>Nom *</label>
+        <input type="text" placeholder="Ton nom" value="${leadData.lastName||''}" oninput="leadData.lastName=this.value"/>
+        ${errs.lastName?`<div class="field-err">${errs.lastName}</div>`:''}
+      </div>
+    </div>
+    <div class="field-row full"><div class="field"><label>Email *</label>
+      <input type="email" placeholder="ton@email.com" value="${leadData.email||''}" oninput="leadData.email=this.value"/>
+      ${errs.email?`<div class="field-err">${errs.email}</div>`:''}
+    </div></div>
+    <div style="margin-top:1.25rem"><button class="btn btn-primary" onclick="submitLead()">Voir mon résultat →</button></div>
+  </div>`;
+}
+
+function renderVisResult(){
+  const res=getVisResult(),cfg=visConfig;
+  if(!leadDone)return`
+    <span class="qtag ${cfg.tagCls}">${cfg.label}</span>
+    <h2 style="font-size:1.6rem;font-weight:700;margin-bottom:.4rem">Quiz terminé !</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1.5rem;font-weight:400">Tu as répondu à toutes les questions. Entre tes coordonnées pour accéder à ton résultat.</p>
+    ${renderLeadForm(cfg)}
+    <div class="back-link"><button onclick="goBack()">← Choisir un autre quiz</button></div>`;
+  return`
+    <span class="qtag ${cfg.tagCls}">${cfg.label}</span>
+    <h2 style="font-size:1.6rem;font-weight:700;margin-bottom:1.5rem">Résultat de ${leadData.firstName}</h2>
+    <div class="rcard"><div class="rtitle">${res.title}</div><div class="rdesc">${res.desc}</div></div>
+    ${ans[6]===0?'<div class="ins-info">Être trouvé par de nouveaux clients : c\'est le cœur d\'une stratégie SEO bien pensée.</div>':''}
+    ${ans[6]===1?'<div class="ins-info">Inspirer confiance dès la première visite : design, contenu et preuve sociale.</div>':''}
+    ${ans[6]===2?'<div class="ins-info">Recevoir plus de demandes : un parcours utilisateur clair et des CTA bien placés.</div>':''}
+    ${ans[6]===3?'<div class="ins-info">Mesurer ce qui fonctionne : Google Analytics, 10 minutes à mettre en place.</div>':''}
+    ${(ans[4]===3||ans[4]===2)?'<div class="ins-warn">Tu ne reçois pas encore de demandes régulières — un ou plusieurs éléments bloquent la conversion.</div>':''}
+    <div class="cta-block">
+      <p>${cfg.ctaText}</p>
+      <button class="cta-btn" onclick="window.location.href='mailto:contact@dialladabo.fr'">${cfg.ctaBtn}</button>
+    </div>
+    <div class="result-actions">
+      <button class="btn" onclick="goBack()">← Choisir un autre quiz</button>
+      <button class="btn btn-primary" onclick="startQuiz('vis')">Recommencer</button>
+    </div>`;
+}
+
+function renderPosResult(){
+  const cfg=posConfig;
+  if(!leadDone)return`
+    <span class="qtag ${cfg.tagCls}">${cfg.label}</span>
+    <h2 style="font-size:1.6rem;font-weight:700;margin-bottom:.4rem">Quiz terminé !</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1.5rem;font-weight:400">Excellent. Entre tes coordonnées pour recevoir ton profil projet personnalisé.</p>
+    ${renderLeadForm(cfg)}
+    <div class="back-link"><button onclick="goBack()">← Choisir un autre quiz</button></div>`;
+  const labels=['Situation actuelle','Objectif principal','Cible','Frein principal','Délai souhaité','Budget indicatif','Attente','Expérience passée'];
+  const cards=labels.map((l,i)=>`<div class="pcard"><div class="pcard-label">${l}</div><div class="pcard-val">${ans[i]!==undefined?cfg.questions[i].opts[ans[i]]:'—'}</div></div>`).join('');
+  return`
+    <span class="qtag ${cfg.tagCls}">${cfg.label}</span>
+    <h2 style="font-size:1.6rem;font-weight:700;margin-bottom:1.5rem">Profil de ${leadData.firstName}</h2>
+    <div class="rcard"><div class="rtitle">Ce que j'ai retenu</div><div class="rdesc">${getPosMessage()}</div></div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:1.25rem 0 8px">Récapitulatif</div>
+    <div class="profile-grid">${cards}</div>
+    <div class="cta-block">
+      <p>${cfg.ctaText}</p>
+      <button class="cta-btn" onclick="window.location.href='mailto:contact@dialladabo.fr'">${cfg.ctaBtn}</button>
+    </div>
+    <div class="result-actions">
+      <button class="btn" onclick="goBack()">← Choisir un autre quiz</button>
+      <button class="btn btn-primary" onclick="startQuiz('pos')">Recommencer</button>
+    </div>`;
+}
+
+function renderQuiz(){
+  const cfg=appMode==='vis'?visConfig:posConfig;
+  const q=cfg.questions[cur],total=cfg.questions.length;
+  const pct=Math.round(((cur+(ans[cur]!==undefined?1:0))/total)*100);
+  const letters=['A','B','C','D'];
+  const opts=q.opts.map((o,i)=>`
+    <div class="opt ${ans[cur]===i?cfg.selCls:''}" onclick="pick(${i})" tabindex="0" role="radio" aria-checked="${ans[cur]===i}">
+      <div class="oletter">${letters[i]}</div>
+      <div class="otext">${o}</div>
+    </div>`).join('');
+  return`
+    <span class="qtag ${cfg.tagCls}">${cfg.label}</span>
+    <h2 class="quiz-title">${cfg.title}</h2>
+    <p class="quiz-sub">${cfg.sub}</p>
+    <div class="pbar-wrap"><div class="pbar-fill ${cfg.fillCls}" style="width:${pct}%"></div></div>
+    <div class="qnum">Question ${cur+1} / ${total}</div>
+    <div class="qtext">${q.q}</div>
+    ${q.hint?`<div class="qhint">${q.hint}</div>`:''}
+    <div class="opts">${opts}</div>
+    <div class="nav">
+      <button class="btn" onclick="goPrev()" ${cur===0?'disabled':''}>← Précédent</button>
+      <button class="btn btn-primary" onclick="goNext()" ${ans[cur]===undefined?'disabled':''}>${cur===total-1?'Voir mon résultat →':'Suivant →'}</button>
+    </div>
+    <div class="back-link"><button onclick="goBack()">← Choisir un autre quiz</button></div>`;
+}
+
+function renderHome(){
+  const n=getCount();
+  return`
+    <div class="home-eyebrow">Quiz interactifs</div>
+    <h1 class="home-title">Deux outils pour<br><em>mieux te connaître.</em></h1>
+    <p class="home-sub">Réponds à quelques questions — je t'envoie une analyse personnalisée pour avancer dans ton projet.</p>
+    <div class="home-grid">
+      <div class="hcard vis" onclick="startQuiz('vis')">
+        <div class="hcard-icon">🔍</div>
+        <h3>Ma visibilité en ligne</h3>
+        <p>Est-ce que les bonnes personnes te trouvent ? 7 questions sans jargon.</p>
+      </div>
+      <div class="hcard peach" onclick="startQuiz('pos')">
+        <div class="hcard-icon">💬</div>
+        <h3>Mon projet web</h3>
+        <p>Parlons de tes besoins et de tes envies. 8 questions pour cadrer ton projet.</p>
+      </div>
+    </div>`;
+}
+
+function render(){
+  const app=document.getElementById('app');
+  if(!appMode){app.innerHTML=renderHome();return;}
+  if(done){app.innerHTML=appMode==='vis'?renderVisResult():renderPosResult();return;}
+  app.innerHTML=renderQuiz();
+}
+render();
 </script>
+</body>
+</html>
